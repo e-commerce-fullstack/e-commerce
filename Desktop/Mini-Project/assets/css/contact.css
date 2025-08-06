@@ -105,7 +105,7 @@ body {
 }
 @media (max-width: 1204px) {
     .contact .container .place-card .ratio {
-        height: 850px;
+        height: 870px;
     }
     .contact .container .contact-card-top .contact-card {
         height: 125px;
@@ -138,7 +138,9 @@ body {
     .contact .container .contact-card-top .contact-card .contact-text p {
         font-size: 14px;
     }
-
+    .contact .container .container-form {
+        height: 700px;
+    }
     .contact .container .container-form h2 {
         font-size: 18px;
         border-left: 2px solid #00bba7;
