@@ -24,6 +24,13 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           <ProductCard v-for="product in productsStore.products" :key="product._id" :product="product" />
         </div>
+
+        <!-- Pagination -->
+        <Pagination class="mt-6" :current-page="productsStore.page" :total-pages="productsStore.totalPages"
+          @change-page="productsStore.fetchProducts" />
+
+
+
       </div>
     </section>
 
@@ -38,6 +45,8 @@
 import Header from "@/components/Header.vue";
 import Footer from "@/components/Footer.vue";
 import { ref } from 'vue'
+import Pagination from "@/components/Pagination.vue";
+
 
 import { onMounted } from "vue";
 import { useProductStore } from "@/stores/productStore";
@@ -48,4 +57,9 @@ const productsStore = useProductStore();
 onMounted(() => {
   productsStore.fetchProducts(); // fetch products when the page mounts
 });
+
+const changePage = (newPage) => {
+  productsStore.fetchProducts(newPage);
+};
+
 </script>

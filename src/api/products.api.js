@@ -2,10 +2,14 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL; // http://localhost:4000/api/v1
 
-// Get all products
-export const getAllProducts = async () => {
-  const res = await axios.get(`${BASE_URL}/product`);
-  return res.data.products;
+// Get all products with pagination
+export const getAllProducts = async ({ page = 1, limit = 8 } = {}) => {
+  const res = await axios.get(`${BASE_URL}/product`, {
+    params: { page, limit } // pass page & limit as query params
+  });
+
+  // return full response so store can read totalPages and products
+  return res.data; // { page, limit, totalPages, totalItems, products }
 };
 
 // Get a single product by ID
