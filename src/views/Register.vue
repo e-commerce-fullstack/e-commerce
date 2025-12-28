@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500">
+    class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-500 mx-4">
     <div class="w-full max-w-md bg-white/90 backdrop-blur rounded-2xl shadow-2xl p-8">
       <h1 class="text-3xl font-bold text-center mb-2">Create account</h1>
       <p class="text-center text-gray-500 mb-8">Sign up to get started</p>
