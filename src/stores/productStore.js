@@ -7,7 +7,7 @@ export const useProductStore = defineStore("products", () => {
   const loading = ref(false);
   const page = ref(1); // current page
   const totalPages = ref(1); // total pages
-  const limit = 5; // items per page
+  const limit = 8; // items per page
 
   const fetchProducts = async (newPage = 1) => {
     loading.value = true;
