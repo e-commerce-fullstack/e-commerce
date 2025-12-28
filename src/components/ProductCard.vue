@@ -4,11 +4,16 @@
     <h3 class="text-lg font-bold mb-2">{{ product.name }}</h3>
     <p class="text-gray-600 mb-2">Category: {{ product.category }}</p>
     <p class="text-gray-800 font-semibold mb-2">Price: ${{ product.price }}</p>
-    <p class="text-gray-500">Stock: {{ product.stock }}</p>
+    <p class="text-gray-500 mb-1.5">Stock: {{ product.stock }}</p>
+    <BaseButton variant="primary" class="mt-auto bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+      Add to Cart
+    </BaseButton>
   </div>
 </template>
 
 <script setup>
+import BaseButton from './ui/BaseButton.vue';
+
 const props = defineProps({
   product: {
     type: Object,

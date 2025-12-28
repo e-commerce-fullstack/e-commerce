@@ -13,16 +13,26 @@
       <!-- Navigation / Cart -->
       <div class="flex items-center space-x-6">
         <!-- Wishlist / Account (optional) -->
-        <button class="text-gray-600 hover:text-indigo-600 font-semibold">Account</button>
+        <BaseButton class="px-4" variant="danger" @click="handleLogout">Logout</BaseButton>
         
         <!-- Cart -->
-        
+      
       </div>
-
     </div>
   </header>
 </template>
 
 <script setup>
-// Still no JS yet, purely visual
+import BaseButton from './ui/BaseButton.vue';
+import { useAuthStore } from "@/stores/authStore"; // Import your store
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const authStore = useAuthStore();
+
+const handleLogout = () => {
+  authStore.logoutUser()
+  router.push("/login")
+}
+
 </script>
