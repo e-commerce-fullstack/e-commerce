@@ -8,13 +8,14 @@ export const useProductStore = defineStore("products", () => {
   const page = ref(1); // current page
   const totalPages = ref(1); // total pages
   const limit = 8; // items per page
+  const search = ref("")
 
   const fetchProducts = async (newPage = 1) => {
     loading.value = true;
     page.value = newPage;
 
     try {
-      const response = await getAllProducts({ page: page.value, limit });
+      const response = await getAllProducts({ page: page.value, limit, search: search.value });
 
       products.value = response.products || [];
 
@@ -26,5 +27,5 @@ export const useProductStore = defineStore("products", () => {
     }
   };
 
-  return { products, loading, page, totalPages, fetchProducts };
+  return { products, loading, page, totalPages, search, fetchProducts };
 });
