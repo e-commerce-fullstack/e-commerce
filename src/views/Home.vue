@@ -32,6 +32,7 @@
 
     <!-- Footer -->
     <Footer />
+    
   </div>
 </template>
 
