@@ -1,8 +1,8 @@
 <template>
   <!-- Backdrop -->
-  <div v-if="show" class="fixed inset-0 z-50">
+  <!-- <div v-if="show" class="fixed inset-0 z-50">
     <div class="absolute inset-0 bg-black bg-opacity-10" @click="closeCart"></div>
-  </div>
+  </div> -->
 
   <!-- Slide-over sidebar -->
   <div :class="[

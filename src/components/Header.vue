@@ -9,16 +9,10 @@
       </div>
 
       <div class="flex items-center space-x-8">
-
-
-
-
         <!-- Navigation / Cart -->
         <div class="flex items-center space-x-6">
           <!-- Wishlist / Account (optional) -->
           <BaseButton class="px-4" variant="danger" @click="handleLogout">Logout</BaseButton>
-
-          <!-- Cart -->
 
         </div>
       </div>
@@ -30,7 +24,6 @@
 import BaseButton from './ui/BaseButton.vue';
 import { useAuthStore } from "@/stores/authStore";
 import { useRouter } from "vue-router";
-import { ref, computed } from 'vue'
 
 const router = useRouter();
 const authStore = useAuthStore();

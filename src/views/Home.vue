@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen flex flex-col">
     <!-- Header -->
-    <Header :show-cart.sync="showCart" />
+    <Header />
 
     <!-- Hero / Search -->
     <section class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-40 text-center">
@@ -32,7 +32,24 @@
 
     <!-- Footer -->
     <Footer />
-    
+
+    <!-- Cart Sidebar -->
+    <CartSidebar v-model:show="showCart" />
+
+    <!-- Floating Cart Button -->
+    <transition name="fade">
+      <div v-if="!showCart" class="fixed bottom-8 right-8 z-40">
+        <button @click="showCart = true"
+          class="relative bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700">
+          <FontAwesomeIcon :icon="['fas', 'shopping-cart']" class="text-xl" />
+          <span v-if="cartCount > 0"
+            class="absolute -top-1 -right-1 bg-red-600 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+            {{ cartCount }}
+          </span>
+        </button>
+      </div>
+    </transition>
+
   </div>
 </template>
 
@@ -43,16 +60,24 @@ import Pagination from "@/components/Pagination.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import { useProductStore } from "@/stores/productStore";
-import { onMounted, watch } from "vue";
+import CartSidebar from "./CartSidebar.vue";
+import { useCartStore } from "@/stores/cartStore";
+import { ref, computed, onMounted, watchEffect, watch } from "vue";
 import { debounce } from "lodash";
-import { ref, watchEffect } from "vue";
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const productsStore = useProductStore();
+const cartStore = useCartStore();
 
-// Cart sidebar state (sync with Header)
+// Cart sidebar state
 const showCart = ref(false);
 
-// Lock background scroll when cart is open
+// Cart count for badge
+const cartCount = computed(() =>
+  cartStore.cartItems.reduce((total, item) => total + item.quantity, 0)
+);
+
+// Lock background scroll when sidebar is open
 watchEffect(() => {
   document.body.style.overflow = showCart.value ? 'hidden' : '';
 });
@@ -62,7 +87,7 @@ onMounted(() => {
   productsStore.fetchProducts();
 });
 
-// Watch search and debounce fetching
+// Watch search with debounce
 watch(
   () => productsStore.search,
   debounce(() => {
@@ -70,3 +95,21 @@ watch(
   }, 300)
 );
 </script>
+
+
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+</style>
