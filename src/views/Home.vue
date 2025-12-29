@@ -16,7 +16,7 @@
           @update:modelValue="() => productsStore.fetchProducts(1)" placeholder="Search products..." />
 
         <!-- category filter -->
-        <div class="ml-1 md:mt-2.5 relative w-full md:w-auto">
+        <div class="ml-1 mt-3 md:mt-0 relative w-full md:w-auto">
           <div class="relative group">
             <select v-model="productsStore.category" @change="productsStore.fetchProducts(1)" class="w-full md:w-56 bg-gray-50 text-gray-700 py-3 pl-4 pr-10 
              border border-gray-200 rounded-xl transition-all duration-200
