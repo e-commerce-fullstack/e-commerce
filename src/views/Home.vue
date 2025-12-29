@@ -5,7 +5,7 @@
 
     <!-- Hero / Search -->
     <section class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-40 text-center">
-      <h1 class="text-5xl font-bold mb-4">Welcome to E-Shop</h1>
+      <h1 class="text-3xl md:text-5xl font-bold mb-4">Welcome to E-Shop</h1>
       <p class="text-lg mb-6">Find the best products at the best prices!</p>
       <BaseInput class="w-[200px] md:w-[600px] mx-auto" v-model="productsStore.search"
         @update:modelValue="() => productsStore.fetchProducts(1)" placeholder="Search products..." />
