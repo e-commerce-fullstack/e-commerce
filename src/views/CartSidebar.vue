@@ -1,60 +1,71 @@
 <template>
-  <!-- Backdrop -->
-  <!-- <div v-if="show" class="fixed inset-0 z-50">
-    <div class="absolute inset-0 bg-black bg-opacity-10" @click="closeCart"></div>
-  </div> -->
 
   <!-- Slide-over sidebar -->
+  <div v-if="show" @click="closeCart" class="fixed inset-0 bg-black bg-opacity-50 z-40 transition-opacity"></div>
+
   <div :class="[
-    'fixed top-0 right-0 h-full w-96 bg-white shadow-xl flex flex-col transition-transform duration-300 z-50',
+    'fixed top-0 right-0 h-full z-50 flex flex-col bg-white shadow-xl transition-transform duration-300 ease-in-out',
+    /* RESPONSIVE WIDTH: Full screen on mobile, 400px on desktop */
+    'w-full sm:w-[400px]',
     show ? 'translate-x-0' : 'translate-x-full'
   ]">
-    <!-- Header -->
+
     <div class="flex justify-between items-center p-4 border-b">
-      <h2 class="text-2xl font-bold">Your Cart</h2>
-      <button class="text-gray-600 text-xl" @click="closeCart">✕</button>
+      <h2 class="text-xl sm:text-2xl font-bold">Your Cart</h2>
+      <button class="p-2 -mr-2 text-gray-500 hover:text-black" @click="closeCart">
+        <span class="text-2xl">✕</span>
+      </button>
     </div>
 
-    <!-- Cart items -->
-    <div v-if="cartStore.cartItems.length === 0" class="flex-1 flex items-center justify-center text-gray-500 p-4">
-      Your cart is empty
+    <div v-if="cartStore.cartItems.length === 0"
+      class="flex-1 flex flex-col items-center justify-center text-gray-500 p-8 text-center">
+      <p class="text-lg">Your cart is empty</p>
+      <button @click="closeCart" class="mt-4 text-indigo-600 font-medium">Continue Shopping</button>
     </div>
 
-    <div v-else class="flex-1 overflow-y-auto p-4 space-y-4">
-      <div v-for="item in cartStore.cartItems" :key="item._id" class="flex space-x-4 items-start">
-        <!-- Product Image -->
-        <img :src="item.image || '/placeholder.png'" alt="product" class="w-16 h-16 object-cover rounded">
+    <div v-else class="flex-1 overflow-y-auto p-4 space-y-6">
+      <div v-for="item in cartStore.cartItems" :key="item._id"
+        class="flex space-x-4 items-start pb-4 border-b border-gray-100 last:border-0">
+        <img :src="item.image || '/placeholder.png'" alt="product"
+          class="w-20 h-20 object-cover rounded-md flex-shrink-0">
 
-        <!-- Product details -->
-        <div class="flex-1">
-          <p class="font-medium">{{ item.name }}</p>
-          <p class="text-gray-500 text-sm">${{ item.price.toFixed(2) }}</p>
-          <div class="flex items-center space-x-2 mt-1">
-            <span class="text-gray-500">Qty:</span>
-            <input type="number" min="1" v-model.number="item.quantity" @change="updateQuantity(item)"
-              class="w-16 border rounded p-1" />
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-gray-900 truncate">{{ item.name }}</p>
+          <p class="text-indigo-600 font-semibold mt-1">${{ item.price.toFixed(2) }}</p>
+
+          <div class="flex items-center justify-between mt-3">
+            <div class="flex items-center border rounded-lg">
+              <BaseButton @click="decreaseQty(item)" class="px-3 py-1 hover:bg-gray-100 text-gray-600">-</BaseButton>
+              <span class="px-3 py-1 font-medium min-w-[40px] text-center">{{ item.quantity }}</span>
+              <BaseButton @click="increaseQty(item)" class="px-3 py-1 hover:bg-gray-100 text-gray-600">+</BaseButton>
+            </div>
+
+            <BaseButton class="text-red-500 text-sm font-medium hover:text-red-700" @click="removeItem(item)">
+              Remove
+            </BaseButton>
           </div>
-          <button class="text-red-600 text-sm mt-1 hover:underline" @click="removeItem(item)">
-            Remove
-          </button>
         </div>
       </div>
     </div>
 
-    <!-- Footer: total + checkout -->
-    <div class="border-t p-4">
-      <div class="flex justify-between font-bold mb-3">
-        <span>Total:</span>
-        <span>${{ totalPrice.toFixed(2) }}</span>
+    <div class="border-t p-4 bg-gray-50">
+      <div class="flex justify-between items-center mb-4">
+        <span class="text-gray-600">Subtotal:</span>
+        <span class="text-xl font-bold">${{ totalPrice.toFixed(2) }}</span>
       </div>
-      <button @click="proceedToCheckout" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+
+      <BaseButton @click="proceedToCheckout"
+        class="w-full bg-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg active:scale-[0.98] transition-transform hover:bg-indigo-700">
         Proceed to Checkout
-      </button>
+      </BaseButton>
+
+      <p class="text-center text-xs text-gray-400 mt-3">Shipping and taxes calculated at checkout</p>
     </div>
   </div>
 </template>
 
 <script setup>
+import BaseButton from "@/components/ui/BaseButton.vue";
 import { computed } from "vue";
 import { useCartStore } from "@/stores/cartStore";
 import { useRouter } from "vue-router";
