@@ -33,6 +33,7 @@ export const useAuthStore = defineStore("auth", () => {
     user.value = null;
     token.value = null;
     localStorage.removeItem("token");
+    localStorage.removeItem("cart");
   }
 
   return { user, token, loginUser, logoutUser , registerUser};

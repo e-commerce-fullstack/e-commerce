@@ -4,11 +4,40 @@
     <Header />
 
     <!-- Hero / Search -->
-    <section class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-40 text-center">
+    <section
+      class="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white py-20 md:py-40 text-center px-4">
       <h1 class="text-3xl md:text-5xl font-bold mb-4">Welcome to E-Shop</h1>
-      <p class="text-lg mb-6">Find the best products at the best prices!</p>
-      <BaseInput class="w-[200px] md:w-[600px] mx-auto" v-model="productsStore.search"
-        @update:modelValue="() => productsStore.fetchProducts(1)" placeholder="Search products..." />
+      <p class="text-lg mb-8 opacity-90">Find the best products at the best prices!</p>
+
+      <div
+        class="flex flex-col md:flex-row items-center justify-center max-w-4xl mx-auto gap-0 overflow-hidden rounded-lg shadow-2xl">
+
+        <BaseInput class="w-full md:flex-1 !rounded-none !border-none" v-model="productsStore.search"
+          @update:modelValue="() => productsStore.fetchProducts(1)" placeholder="Search products..." />
+
+        <!-- category filter -->
+        <div class="ml-1 relative w-full md:w-auto">
+          <div class="relative group">
+            <select v-model="productsStore.category" @change="productsStore.fetchProducts(1)" class="w-full md:w-56 bg-gray-50 text-gray-700 py-3 pl-4 pr-10 
+             border border-gray-200 rounded-xl transition-all duration-200
+             appearance-none cursor-pointer
+             hover:bg-white hover:border-blue-400 
+             focus:outline-none focus:ring-2 focus:ring-blue-100 focus:border-blue-500">
+              <option value="">All Categories</option>
+              <option v-for="cat in productsStore.categories" :key="cat" :value="cat">
+                {{ cat }}
+              </option>
+            </select>
+
+            <div
+              class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-400 group-hover:text-blue-500 transition-colors">
+              <svg class="h-5 w-5 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                <path d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Products -->
@@ -85,6 +114,8 @@ watchEffect(() => {
 // Fetch products on mount
 onMounted(() => {
   productsStore.fetchProducts();
+  productsStore.fetchCategories()
+
 });
 
 // Watch search with debounce

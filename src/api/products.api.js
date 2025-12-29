@@ -2,10 +2,20 @@ import axios from "axios";
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL; // http://localhost:4000/api/v1
 
+
+// 1. Get Categories (Moved this logic up)
+export const getCategories = async (token) => {
+  // We add a config object to ensure no old tokens interfere
+  const res = await axios.get(`${BASE_URL}/product/categories`, {
+    headers: { Authorization: `Bearer ${token}` } 
+  });
+  return res.data;
+};
+
 // Get all products with pagination
-export const getAllProducts = async ({ page = 1, limit = 8, search = ""  } = {}) => {
+export const getAllProducts = async ({ page = 1, limit = 8, search = "" , category = "" } = {}) => {
   const res = await axios.get(`${BASE_URL}/product`, {
-    params: { page, limit, search } // pass page & limit as query params
+    params: { page, limit, search, category } // pass page & limit as query params
   });
 
   // return full response so store can read totalPages and products
@@ -18,6 +28,7 @@ export const getProductById = async (id) => {
   return res.data;
 };
 
+
 // Create a new product
 export const createProduct = async (productData, token) => {
   const res = await axios.post(`${BASE_URL}/products`, productData, {
@@ -25,3 +36,5 @@ export const createProduct = async (productData, token) => {
   });
   return res.data;
 };
+
+
