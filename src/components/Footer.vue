@@ -9,14 +9,6 @@
                     <p class="text-gray-400 text-sm">Your favorite online store</p>
                 </div>
 
-                <!-- Navigation Links -->
-                <div
-                    class="flex flex-col md:flex-row justify-center md:justify-center space-y-3 md:space-y-0 md:space-x-8">
-                    <a href="#" class="hover:text-white transition-colors duration-200">Home</a>
-                    <a href="#" class="hover:text-white transition-colors duration-200">Products</a>
-                    <a href="#" class="hover:text-white transition-colors duration-200">About</a>
-                    <a href="#" class="hover:text-white transition-colors duration-200">Contact</a>
-                </div>
 
                 <!-- My github -->
                 <div class="flex justify-center md:justify-end space-x-6">
