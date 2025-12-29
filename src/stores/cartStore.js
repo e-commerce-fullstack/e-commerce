@@ -7,7 +7,6 @@ export const useCartStore = defineStore("cart", () => {
 
   const addToCart = (product) => {
     const existing = cartItems.value.find((item) => item._id === product._id);
-    const fullImage = `${import.meta.env.VITE_API_BASE_URL}/${product.image}`;
 
     if (existing) {
       existing.quantity += 1;
@@ -15,7 +14,6 @@ export const useCartStore = defineStore("cart", () => {
       cartItems.value.push({
         ...product,
         quantity: 1,
-        image: fullImage,
       });
     }
   };

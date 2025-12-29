@@ -22,7 +22,7 @@
     <div v-else class="flex-1 overflow-y-auto px-6 py-4 space-y-6">
       <div v-for="item in cartStore.cartItems" :key="item._id" class="group flex gap-5 items-start">
         <div class="relative w-24 h-24 flex-shrink-0 overflow-hidden rounded-xl border border-gray-100 bg-gray-50">
-          <img :src="item.image || '/placeholder.png'" alt="product"
+          <img :src="item.image" alt="product"
             class="w-full h-full object-cover object-center transition-transform duration-300 group-hover:scale-105" />
         </div>
 
