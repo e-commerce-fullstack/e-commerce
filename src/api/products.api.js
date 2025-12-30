@@ -1,7 +1,5 @@
 import axios from "axios";
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL; // http://localhost:4000/api/v1
-
+import { BASE_URL } from "./api";
 
 // 1. Get Categories (Moved this logic up)
 export const getCategories = async (token) => {

@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, watch } from "vue";
 import { getCategories, getAllProducts } from "@/api/products.api";
 
+
 export const useProductStore = defineStore("products", () => {
   const products = ref([]);
   const loading = ref(false);
@@ -12,8 +13,11 @@ export const useProductStore = defineStore("products", () => {
   const category = ref(""); // selected category
   const categories = ref([]);
 
-  const fetchProducts = async (newPage = 1) => {
-    // loading.value = true;
+  const fetchProducts = async (newPage = page.value) => {
+    if (newPage !== page.value) {
+      loading.value = true;
+    }
+
     page.value = newPage;
 
     try {
@@ -25,8 +29,6 @@ export const useProductStore = defineStore("products", () => {
       });
 
       products.value = response.products || [];
-
-      // Set totalPages from API, or calculate if needed
       totalPages.value =
         response.totalPages ?? Math.ceil(response.totalItems / limit) ?? 1;
     } finally {
@@ -35,19 +37,13 @@ export const useProductStore = defineStore("products", () => {
   };
 
   const fetchCategories = async () => {
-    const token = localStorage.getItem('token')
-    try{
-      categories.value = await getCategories(token)
-    }
-    catch(err){
+    const token = localStorage.getItem("token");
+    try {
+      categories.value = await getCategories(token);
+    } catch (err) {
       console.log("Failed to fetch categories", err);
-      
     }
   };
-
-  watch(category, () => {
-    fetchProducts(1);
-  });
 
   return {
     products,
