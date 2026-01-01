@@ -18,4 +18,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },
+  server: {
+    allowedHosts: ['.workers.dev', '.pages.dev'] // This allows Cloudflare domains
+  }
 })
