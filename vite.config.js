@@ -19,6 +19,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['.workers.dev', '.pages.dev'] // This allows Cloudflare domains
+    allowedHosts: true
   }
 })
