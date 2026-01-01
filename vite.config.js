@@ -17,11 +17,5 @@ export default defineConfig({
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
-  },
-  server: {
-    allowedHosts: ['.workers.dev', 'e-commerce.core-commerce.workers.dev']
-  },
-  preview: {
-    allowedHosts: ['.workers.dev', 'e-commerce.core-commerce.workers.dev']
   }
 })
