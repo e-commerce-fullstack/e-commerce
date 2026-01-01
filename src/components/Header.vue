@@ -12,7 +12,7 @@
         <!-- Navigation / Cart -->
         <div class="flex items-center space-x-6">
           <!-- Wishlist / Account (optional) -->
-          <BaseButton class="px-4" variant="danger" @click="handleLogout">Logout</BaseButton>
+          <BaseButton class="px-4 py-2" variant="danger" @click="handleLogout">Logout</BaseButton>
 
         </div>
       </div>
