@@ -89,7 +89,7 @@ import Pagination from "@/components/Pagination.vue";
 import ProductCard from "@/components/ProductCard.vue";
 import BaseInput from "@/components/ui/BaseInput.vue";
 import { useProductStore } from "@/stores/productStore";
-import CartSidebar from "./CartSidebar.vue";
+import CartSidebar from "@/components/cart/CartSidebar.vue";
 import { useCartStore } from "@/stores/cartStore";
 import { ref, computed, onMounted, watchEffect, watch } from "vue";
 import { debounce } from "lodash";
