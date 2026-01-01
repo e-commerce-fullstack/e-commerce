@@ -19,10 +19,9 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: true
+    allowedHosts: ['.workers.dev', 'e-commerce.core-commerce.workers.dev']
   },
   preview: {
-    // Fixes "Invalid hostname" on the deployed Cloudflare URL
-    allowedHosts: true,
+    allowedHosts: ['.workers.dev', 'e-commerce.core-commerce.workers.dev']
   }
 })
