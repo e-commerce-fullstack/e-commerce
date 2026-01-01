@@ -20,5 +20,9 @@ export default defineConfig({
   },
   server: {
     allowedHosts: true
+  },
+  preview: {
+    // Fixes "Invalid hostname" on the deployed Cloudflare URL
+    allowedHosts: true,
   }
 })
