@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Home from "@/views/pages/Home.vue";
+import Home from "@/modules/shop/views/Home.vue";
 import { useAuthStore } from "@/stores/authStore";
 
 const router = createRouter({
@@ -9,27 +9,26 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
-      meta: { requiresAuth: true },
     },
     {
       path: "/login",
       name: "login",
-      component: () => import("@/views/auth/Login.vue"),
+      component: () => import("@/modules/auth/views/Login.vue"),
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("@/views/auth/Register.vue"),
+      component: () => import("@/modules/auth/views/Register.vue"),
     },
     {
       path: "/checkout",
       name: "checkout",
-      component: () => import("@/views/pages/Checkout.vue")
+      component: () => import("@/modules/shop/views/Checkout.vue")
     },
     {
       path: "/order",
       name: "order",
-      component: () => import("@/views/pages/Order.vue")
+      component: () => import("@/modules/shop/views/Order.vue")
     }
 
   ],
