@@ -12,7 +12,7 @@
     <h2 class="text-3xl font-extrabold text-slate-900 mb-6 tracking-tight">Checkout</h2>
 
     <!-- Cart items -->
-    <div class="space-y-4 mb-8">
+    <div class="space-y-4 mb-8 px-3">
       <div v-for="item in cartItems" :key="item._id"
         class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors">
         <div class="flex flex-col">
