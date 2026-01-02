@@ -42,15 +42,15 @@
       </div>
     </div>
 
-    <BaseButton @click="confirmOrder"
+    <BaseButton @click="confirmOrder" :disabled="isLoading"
       class="w-full mt-8 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-lg shadow-indigo-200 transition-all active:scale-[0.98] focus:ring-4 focus:ring-indigo-100">
-      Complete Purchase
+      {{ isLoading ? 'Completing In...' : 'Complete Purchase' }}
     </BaseButton>
   </div>
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useCartStore } from "@/stores/cartStore";
 import { useOrderStore } from "@/stores/orderStore";
@@ -63,6 +63,9 @@ const orderStore = useOrderStore();
 // Reactive cart items
 const cartItems = cartStore.cartItems;
 
+const isLoading = ref(false);
+
+
 // Total amount
 const total = computed(() =>
   cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)
@@ -70,6 +73,7 @@ const total = computed(() =>
 
 // Confirm order
 const confirmOrder = async () => {
+  isLoading.value = true
   try {
     // Build payload object
     const payload = {
@@ -90,6 +94,9 @@ const confirmOrder = async () => {
     router.push("/order");
   } catch (err) {
     console.error("Failed to place order:", err);
+  }
+  finally{
+    isLoading.value = false
   }
 };
 

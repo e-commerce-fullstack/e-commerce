@@ -1,5 +1,4 @@
-import axios from "axios";
-import { BASE_URL } from "./api"; // BASE_URL = "https://api-9rgk.onrender.com/api/v1"
+import api from "./api"; // BASE_URL = "https://api-9rgk.onrender.com/api/v1"
 
 const getAuthHeader = () => {
   const token = localStorage.getItem("token");
@@ -10,8 +9,8 @@ const getAuthHeader = () => {
 // create order
 export const createOrder = async (payload) => {
   // payload = { products: [...], total: 100, status: 'pending' }
-  const res = await axios.post(
-    `${BASE_URL}/order`,
+  const res = await api.post(
+    `/order`,
     payload, // send the object directly
     { headers: getAuthHeader() }
   );
@@ -21,7 +20,7 @@ export const createOrder = async (payload) => {
 
 // Get all orders
 export const getOrders = async () => {
-  const res = await axios.get(`${BASE_URL}/order`, {
+  const res = await api.get(`order`, {
     headers: getAuthHeader(),
   });
   return res.data;
@@ -29,7 +28,7 @@ export const getOrders = async () => {
 
 // Get a single order by ID
 export const getOrdersById = async (orderId) => {
-  const res = await axios.get(`${BASE_URL}/order/${orderId}`, {
+  const res = await api.get(`/order/${orderId}`, {
     headers: getAuthHeader(),
   });
   return res.data;

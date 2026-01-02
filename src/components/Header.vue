@@ -12,7 +12,8 @@
         <!-- Navigation / Cart -->
         <div class="flex items-center space-x-6">
           <!-- Wishlist / Account (optional) -->
-          <BaseButton class="px-4 py-2" variant="danger" @click="handleLogout">Logout</BaseButton>
+          <BaseButton v-if="authStore.isAuthenticated" class="px-4 py-2" variant="danger" @click="handleLogout">Logout</BaseButton>
+          <BaseButton v-else class="px-4 py-2" variant="primary" @click="router.push('/login')">Login</BaseButton>
 
         </div>
       </div>
@@ -33,6 +34,9 @@ const handleLogout = () => {
   authStore.logoutUser()
   router.push("/login")
 }
+
+// optional: verify token with backend once when component mounts
+authStore.verifyToken?.();
 
 
 </script>

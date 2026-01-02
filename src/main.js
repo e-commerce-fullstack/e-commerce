@@ -21,4 +21,10 @@ app.component('FontAwesomeIcon', FontAwesomeIcon)
 app.use(createPinia())
 app.use(router)
 
+
+// now the store is fully initialized
+import { useAuthStore } from './stores/authStore'
+const authStore = useAuthStore()
+authStore.verifyToken() // run once globally
+
 app.mount('#app')
