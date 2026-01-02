@@ -43,31 +43,99 @@ src/
 ├─ api/                   # All API calls
 │   ├─ auth.js            # register, login
 │   ├─ products.js        # createProduct, getAllProduct, getProductById
+│   ├─ api.js        
 │   └─ orders.js          # createOrder, getAllOrder
 │
 ├─ stores/                # Pinia stores
 │   ├─ authStore.js
 │   ├─ productStore.js
+│   ├─ cartStore.js
 │   └─ orderStore.js
 │
-├─ views/                 # Pages for router
-│   ├─ Home.vue
-│   ├─ Login.vue
-│   ├─ Register.vue
-│   ├─ ProductList.vue
-│   ├─ ProductDetail.vue
-│   ├─ CreateProduct.vue
-│   ├─ OrderList.vue
-│   └─ CreateOrder.vue
+├─ views/                 
+│   ├─ auth/
+│   │   ├─ Login.vue
+│   │   ├─ Register.vue
+│   ├─ auth/
+│   │   ├─ Home.vue
+│   │   ├─ CreateProduct.vue
+│   │   ├─ Checkout.vue
+│   │   └─ Order.vue 
 │
 ├─ components/            # Reusable components
-│   ├─ Header.vue
-│   ├─ Footer.vue
-│   └─ ProductCard.vue
+│   ├─ cart/
+│   │   ├─  CartEmpty.vue
+│   │   ├─  CartFooter.vue
+│   │   ├─  CartItem.vue
+│   │   ├─  CartHeader.vue
+│   │   ├─  CartSidebar.vue
+│   └─ ui/
+│       ├─  BaseButton.vue
+│       ├─  BaseInput.vue
+│       ├─  BaseModal.vue
 │
 ├─ router/
 │   └─ index.js           # Define routes
 │
 ├─ App.vue
 └─ main.js
+
+```
+
+# new architecture 
+```
+src/
+├─ api/
+│   ├─ auth.js
+│   ├─ products.js
+│   ├─ orders.js
+│   └─ api.js
+│
+├─ stores/                 # global (no DB)
+│   ├─ authStore.js
+│   ├─ productStore.js
+│   ├─ cartStore.js        # cart state + localStorage
+│   └─ orderStore.js
+│
+├─ modules/
+│   ├─ auth/
+│   │   └─ views/
+│   │       ├─ Login.vue
+│   │       └─ Register.vue
+│   │
+│   ├─ shop/
+│   │   └─ views/
+│   │       ├─ Home.vue
+│   │       ├─ Checkout.vue
+│   │       └─ Order.vue
+│   │
+│   ├─ admin/
+│   │   ├─ views/
+│   │   │   ├─ Dashboard.vue
+│   │   │   ├─ Products.vue
+│   │   │   ├─ CreateProduct.vue
+│   │   │   ├─ Orders.vue
+│   │   │   └─ Users.vue
+│   │   └─ components/
+│   │       ├─ AdminSidebar.vue
+│   │       └─ AdminHeader.vue
+│
+├─ components/
+│   ├─ cart/
+│   │   ├─ CartEmpty.vue
+│   │   ├─ CartFooter.vue
+│   │   ├─ CartItem.vue
+│   │   ├─ CartHeader.vue
+│   │   └─ CartSidebar.vue
+│   └─ ui/
+│       ├─ BaseButton.vue
+│       ├─ BaseInput.vue
+│       └─ BaseModal.vue
+│
+├─ router/
+│   └─ index.js
+│
+├─ App.vue
+└─ main.js
+
 ```
