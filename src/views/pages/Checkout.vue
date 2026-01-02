@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md mx-auto bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-200/50 p-8 mt-4">
+  <div class="max-w-md mx-4 sm:mx-auto bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-200/50 p-8 mt-4">
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <BaseButton @click="goBack" variant="base"
@@ -12,7 +12,7 @@
     <h2 class="text-3xl font-extrabold text-slate-900 mb-6 tracking-tight">Checkout</h2>
 
     <!-- Cart items -->
-    <div class="space-y-4 mb-8 px-3">
+    <div class="space-y-4 mb-8 ">
       <div v-for="item in cartItems" :key="item._id"
         class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors">
         <div class="flex flex-col">
@@ -24,7 +24,7 @@
         </span>
       </div>
     </div>
-    
+
 
     <!-- Total -->
     <div class="border-t border-slate-100 pt-6 space-y-3">
