@@ -24,6 +24,7 @@
         </span>
       </div>
     </div>
+    
 
     <!-- Total -->
     <div class="border-t border-slate-100 pt-6 space-y-3">
