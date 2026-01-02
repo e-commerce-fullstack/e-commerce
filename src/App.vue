@@ -1,3 +1,6 @@
 <template>
-  <RouterView/>
+  <div class="overflow-hidden">
+
+    <RouterView/>
+  </div>
 </template>

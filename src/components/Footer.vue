@@ -16,7 +16,7 @@
                         Developed by:
                         <a href="https://github.com/Oeun-nuphea" target="_blank"
                             class="relative text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 animate-pulse group inline-block">
-                            Oeun Nuphea
+                            G4
                             <span class="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 
                    bg-black text-white text-xs px-3 py-1 rounded opacity-0
                    transition-opacity duration-300 pointer-events-none group-hover:opacity-100 whitespace-nowrap">

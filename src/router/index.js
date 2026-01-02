@@ -23,22 +23,22 @@ const router = createRouter({
     {
       path: "/checkout",
       name: "checkout",
-      component: () => import("@/modules/shop/views/Checkout.vue")
+      component: () => import("@/modules/shop/views/Checkout.vue"),
+      meta: { requiresAuth: true },
     },
     {
       path: "/order",
       name: "order",
-      component: () => import("@/modules/shop/views/Order.vue")
-    }
-
+      component: () => import("@/modules/shop/views/Order.vue"),
+      meta: { requiresAuth: true },
+    },
   ],
 });
 
 router.beforeEach((to) => {
   const authStore = useAuthStore();
-
   if (to.meta.requiresAuth && !authStore.token) {
-    return "/login";
+    return { name: "login" };
   }
 });
 

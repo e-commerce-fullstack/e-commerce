@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, computed, watch } from "vue";
 import { login, register, logout } from "../api/auth.api.js"; // match export names
+import api from '@/api/api.js'
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
@@ -24,8 +25,8 @@ export const useAuthStore = defineStore("auth", () => {
       const data = await register(userData);
       return data;
     } catch (err) {
-      console.error("Store Register Error:", error);
-      throw error; // pass error to the component
+      console.error("Store Register Error:", err);
+      throw err; // pass error to the component
     }
   }
 
@@ -36,5 +37,46 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("cart");
   }
 
-  return { user, token, loginUser, logoutUser , registerUser};
+  // check token existence and expiration
+  const isAuthenticated = computed(() => {
+    if (!token.value) return false;
+    try {
+      const payload = JSON.parse(atob(token.value.split(".")[1]));
+      return payload.exp * 1000 > Date.now();
+    } catch {
+      return false;
+    }
+  });
+
+  // keep localStorage in sync automatically
+  watch(token, (newVal) => {
+    if (newVal) localStorage.setItem("token", newVal);
+    else localStorage.removeItem("token");
+  });
+
+  function setToken(newToken) {
+    token.value = newToken;
+  }
+
+  // verify token by calling /auth/me
+  async function verifyToken() {
+    if (!token.value) return logoutUser();
+    try {
+      const { data } = await api.get("/auth/me");
+      user.value = data.user;
+    } catch {
+      logoutUser(); // token invalid → clear token
+    }
+  }
+
+  return {
+    user,
+    token,
+    isAuthenticated,
+    loginUser,
+    logoutUser,
+    registerUser,
+    setToken,
+    verifyToken,
+  };
 });
