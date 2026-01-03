@@ -13,7 +13,7 @@
         <div class="flex items-center space-x-6">
           <!-- Wishlist / Account (optional) -->
           <BaseButton v-if="authStore.isAuthenticated" class="px-4 py-2" variant="danger" @click="handleLogout">Logout</BaseButton>
-          <BaseButton v-else class="px-4 py-2" variant="primary" @click="router.push('/login')">Login</BaseButton>
+          <BaseButton v-else class="px-4 py-2" variant="primary_2" @click="router.push('/login')">Login</BaseButton>
 
         </div>
       </div>

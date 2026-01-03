@@ -1,82 +1,102 @@
 import { defineStore } from "pinia";
-import { ref, computed, watch } from "vue";
-import { login, register, logout } from "../api/auth.api.js"; // match export names
-import api from '@/api/api.js'
+import { ref, computed } from "vue";
+import api from "@/api/api.js";
+import { login, register, logout, refresh } from "../api/auth.api.js";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
-  const token = ref(localStorage.getItem("token") || null);
+  const accessToken = ref(localStorage.getItem("accessToken") || null);
+  const refreshTokenValue = ref(localStorage.getItem("refreshToken") || null);
 
-  // Wrap the imported `login` function
+  // Login and store access token
   async function loginUser(credentials) {
     try {
-      const data = await login(credentials); // call imported login
+      const data = await login(credentials);
       user.value = data.user;
-      token.value = data.token;
-      localStorage.setItem("token", data.token);
-    } catch (error) {
-      console.error("Store Login Error:", error);
-      throw error; // pass error to component
+      accessToken.value = data.accessToken;
+      refreshTokenValue.value = data.refreshToken;
+
+      localStorage.setItem("accessToken", data.accessToken);
+      localStorage.setItem("refreshToken", data.refreshToken);
+    } catch (err) {
+      console.error("Login Error:", err);
+      throw err;
     }
   }
 
+  // Register user
   async function registerUser(userData) {
     try {
-      const data = await register(userData);
-      return data;
+      return await register(userData);
     } catch (err) {
-      console.error("Store Register Error:", err);
-      throw err; // pass error to the component
+      console.error("Register Error:", err);
+      throw err;
     }
   }
 
-  function logoutUser() {
-    user.value = null;
-    token.value = null;
-    localStorage.removeItem("token");
-    localStorage.removeItem("cart");
-  }
-
-  // check token existence and expiration
-  const isAuthenticated = computed(() => {
-    if (!token.value) return false;
+  // Logout user
+  async function logoutUser() {
     try {
-      const payload = JSON.parse(atob(token.value.split(".")[1]));
-      return payload.exp * 1000 > Date.now();
-    } catch {
-      return false;
+      await logout(); // backend invalidation optional
+    } catch (err) {
+      console.error("Logout Error:", err);
+    } finally {
+      user.value = null;
+      accessToken.value = null;
+      refreshTokenValue.value = null;
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("cart");
     }
-  });
-
-  // keep localStorage in sync automatically
-  watch(token, (newVal) => {
-    if (newVal) localStorage.setItem("token", newVal);
-    else localStorage.removeItem("token");
-  });
-
-  function setToken(newToken) {
-    token.value = newToken;
   }
 
-  // verify token by calling /auth/me
+  // Check if user is authenticated
+  const isAuthenticated = computed(() => !!accessToken.value);
+
+  // Set access token manually (after refresh)
+  function setAccessToken(token) {
+    accessToken.value = token;
+  }
+
+  // Refresh access token using httpOnly refresh token
+  async function refreshAccessToken() {
+    try {
+      if (!refreshTokenValue.value)
+        throw new Error("No refresh token available");
+      const data = await refresh(refreshTokenValue.value); // send token in body
+      accessToken.value = data.accessToken;
+      localStorage.setItem("accessToken", data.accessToken);
+      return data.accessToken;
+    } catch (err) {
+      console.error("Refresh Token Error:", err);
+      await logoutUser();
+      throw err;
+    }
+  }
+
+  // Verify token by calling /auth/me
   async function verifyToken() {
-    if (!token.value) return logoutUser();
+    if (!accessToken.value) return logoutUser();
     try {
-      const { data } = await api.get("/auth/me");
+      const { data } = await api.get("/auth/me", {
+        headers: { Authorization: `Bearer ${accessToken.value}` },
+      });
       user.value = data.user;
-    } catch {
-      logoutUser(); // token invalid → clear token
+    } catch (err) {
+      console.error("Verify Token Error:", err);
+      await logoutUser();
     }
   }
 
   return {
     user,
-    token,
+    accessToken,
     isAuthenticated,
     loginUser,
-    logoutUser,
     registerUser,
-    setToken,
+    logoutUser,
+    setAccessToken,
+    refreshAccessToken,
     verifyToken,
   };
 });

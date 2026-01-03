@@ -35,11 +35,24 @@ const router = createRouter({
   ],
 });
 
-router.beforeEach((to) => {
+router.beforeEach(async (to) => {
   const authStore = useAuthStore();
-  if (to.meta.requiresAuth && !authStore.token) {
-    return { name: "login" };
+
+  if (to.meta.requiresAuth) {
+    // try refresh if no access token
+    if (!authStore.accessToken && authStore.refreshTokenValue) {
+      try {
+        await authStore.refreshAccessToken();
+      } catch {
+        return { name: "login" };
+      }
+    }
+
+    if (!authStore.accessToken) {
+      return { name: "login" };
+    }
   }
 });
+
 
 export default router;
