@@ -21,6 +21,7 @@ const baseClass = computed(() => {
         primary: `${base} w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90`,
         secondary: `${base} py-3 bg-gray-200 text-gray-800 hover:bg-gray-300`,
         danger: "px-4 py-0 bg-red-600 text-white hover:bg-red-700",
+        primary_2: "px-4 py-0 bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:opacity-90",
 
         next_prev: "px-4 bg-white text-gray-800 font-semibold rounded-xl shadow-lg hover:bg-gray-100 hover:scale-105 transition transform duration-200 ease-in-out",
 

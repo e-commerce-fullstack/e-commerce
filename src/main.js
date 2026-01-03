@@ -24,7 +24,15 @@ app.use(router)
 
 // now the store is fully initialized
 import { useAuthStore } from './stores/authStore'
-const authStore = useAuthStore()
-authStore.verifyToken() // run once globally
+const authStore = useAuthStore();
+if (authStore.refreshTokenValue) {
+  try {
+    await authStore.refreshAccessToken();
+    await authStore.verifyToken();
+  } catch {
+    console.log("No active session or refresh failed");
+  }
+}
+
 
 app.mount('#app')

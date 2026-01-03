@@ -1,35 +1,20 @@
-import api from "./api"; // BASE_URL = "https://api-9rgk.onrender.com/api/v1"
+// order.api.js
+import api from "./api.js";
 
-const getAuthHeader = () => {
-  const token = localStorage.getItem("token");
-  return { Authorization: `Bearer ${token}` };
-};
-
-
-// create order
+// Create order
 export const createOrder = async (payload) => {
-  // payload = { products: [...], total: 100, status: 'pending' }
-  const res = await api.post(
-    `/order`,
-    payload, // send the object directly
-    { headers: getAuthHeader() }
-  );
+  const res = await api.post("/order", payload); // interceptor adds token
   return res.data;
 };
-
 
 // Get all orders
 export const getOrders = async () => {
-  const res = await api.get(`order`, {
-    headers: getAuthHeader(),
-  });
+  const res = await api.get("/order"); // interceptor adds token
   return res.data;
 };
 
-// Get a single order by ID
+// Get order by ID
 export const getOrdersById = async (orderId) => {
-  const res = await api.get(`/order/${orderId}`, {
-    headers: getAuthHeader(),
-  });
+  const res = await api.get(`/order/${orderId}`); // interceptor adds token
   return res.data;
 };

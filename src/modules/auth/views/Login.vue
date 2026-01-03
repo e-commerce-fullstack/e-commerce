@@ -44,21 +44,22 @@ const handleLogin = async () => {
   errorMessage.value = "";
 
   try {
-    // 2. Call the action from your Pinia store
     await authStore.loginUser({
       email: email.value,
       password: password.value,
     });
 
+    await authStore.verifyToken(); // optional, fetches user
 
-    // 3. Redirect to home/dashboard on success
     router.push("/");
-    alert("Login Success")
+    alert("Login successful");
   } catch (error) {
-    // Handle errors (e.g., wrong password)
-    errorMessage.value = error.response?.data?.message || "Login failed. Please try again.";
+    errorMessage.value =
+      error.response?.data?.message || "Login failed. Please try again.";
   } finally {
     isLoading.value = false;
   }
 };
+
+
 </script>

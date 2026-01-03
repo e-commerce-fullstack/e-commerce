@@ -13,9 +13,13 @@ export const register = async (userData) => {
 };
 
 // Logout
-export const logout = async (token) => {
-  const res = await api.post(`$/auth/logout`, {}, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+export const logout = async () => {
+  const res = await api.post(`/auth/logout`);
   return res.data;
+};
+
+// Refresh access token (send refresh token in body)
+export const refresh = async (refreshToken) => {
+  const res = await api.post(`/auth/refresh`, { refreshToken });
+  return res.data; // { accessToken: '...' }
 };
