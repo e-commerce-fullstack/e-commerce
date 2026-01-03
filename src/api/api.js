@@ -8,6 +8,14 @@ const api = axios.create({
 // Attach access token to requests
 api.interceptors.request.use((config) => {
   const auth = useAuthStore();
+  // Skip adding token for login/register/refresh
+  if (
+    config.url.includes("/auth/login") ||
+    config.url.includes("/auth/register") ||
+    config.url.includes("/auth/refresh")
+  ) {
+    return config;
+  }
   console.log("Interceptor token:", auth.accessToken);
   if (auth.accessToken) {
     config.headers.Authorization = `Bearer ${auth.accessToken}`;
