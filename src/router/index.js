@@ -32,6 +32,12 @@ const router = createRouter({
       component: () => import("@/modules/shop/views/Order.vue"),
       meta: { requiresAuth: true },
     },
+    {
+      path: "/payment/:id",
+      name: "payment",
+      component: () => import("@/modules/shop/views/Payment.vue"),
+      meta: {requiresAuth: true}
+    }
   ],
 });
 

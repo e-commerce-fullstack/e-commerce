@@ -43,5 +43,11 @@ export const useCartStore = defineStore("cart", () => {
     { deep: true }
   );
 
-  return { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice };
+  // ✅ ADD THIS FUNCTION
+  const clearCart = () => {
+    cartItems.value = [];
+    // The watch() below will automatically clear localStorage for you
+  };
+
+  return { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, clearCart };
 });

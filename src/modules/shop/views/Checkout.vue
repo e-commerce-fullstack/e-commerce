@@ -75,27 +75,26 @@ const total = computed(() =>
 const confirmOrder = async () => {
   isLoading.value = true
   try {
-    // Build payload object
     const payload = {
       products: cartItems.map(i => ({ product: i._id, quantity: i.quantity })),
       total: total.value,
       status: "pending",
     };
-    console.log("Payload to send:", payload); // debug log
 
-    // Call order store with payload
+    // 1. Create the order in the database
     const res = await orderStore.placeOrder(payload);
-    console.log("Order created:", res); // debug log
+    
+    // 2. Clear cart
+    cartStore.clearCart(); // Better than just localStorage.removeItem
 
-    // Clear cart after success
-    localStorage.removeItem("cart");
-
-    // Navigate to orders page
-    router.push("/order");
+    // 3. ROUTE TO PAYMENT (not order history)
+    // Assuming 'res' contains the new order object with _id
+    router.push(`/payment/${res._id}`); 
+    
   } catch (err) {
     console.error("Failed to place order:", err);
-  }
-  finally{
+    alert("Could not create order. Please try again.");
+  } finally {
     isLoading.value = false
   }
 };

@@ -28,7 +28,7 @@
     <div v-else class="space-y-6">
       <div v-for="order in orders" :key="order._id"
         class="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden">
-        
+
         <div
           class="bg-gray-50/50 px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div class="flex flex-col sm:flex-row sm:gap-6 text-sm">
@@ -85,9 +85,16 @@
             <span v-else>Payment info unavailable</span>
           </div>
 
-          <div class="flex items-center gap-3">
-            <span class="text-sm text-gray-500">Total Amount</span>
-            <span class="text-xl font-bold text-gray-900">${{ order.total.toFixed(2) }}</span>
+          <div class="flex items-center gap-6">
+            <router-link v-if="order.status === 'pending'" :to="`/payment/${order._id}`"
+              class="inline-flex items-center px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-bold rounded-xl transition-all shadow-md shadow-indigo-100 active:scale-95">
+              Pay Now
+            </router-link>
+
+            <div class="flex items-center gap-3">
+              <span class="text-sm text-gray-500">Total Amount</span>
+              <span class="text-xl font-bold text-gray-900">${{ order.total.toFixed(2) }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -136,19 +143,19 @@ const getStatusBadgeStyles = (status) => {
     case "delivered":
     case "paid":
       return "bg-green-50 text-green-700 border-green-200";
-    
+
     case "pending":
     case "processing":
       return "bg-blue-50 text-blue-700 border-blue-200";
-    
+
     case "shipped":
     case "dispatched":
       return "bg-indigo-50 text-indigo-700 border-indigo-200";
-      
+
     case "cancelled":
     case "failed":
       return "bg-red-50 text-red-700 border-red-200";
-      
+
     default:
       return "bg-gray-50 text-gray-700 border-gray-200";
   }
