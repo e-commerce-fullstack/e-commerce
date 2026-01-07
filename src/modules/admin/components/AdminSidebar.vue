@@ -20,7 +20,7 @@ const isActive = (path) => route.path === path
 <template>
     <aside class="w-64 border-r bg-white h-full flex flex-col shadow-sm">
         <div class="p-6 font-bold text-xl tracking-tight border-b text-slate-900 flex items-center gap-2">
-            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs">A</div>
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs">E</div>
             Store Admin
         </div>
         <nav class="flex-1 p-4 space-y-1">
