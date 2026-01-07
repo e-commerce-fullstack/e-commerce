@@ -4,7 +4,8 @@ import api from "@/api/api.js";
 import { login, register, logout, refresh } from "../api/auth.api.js";
 
 export const useAuthStore = defineStore("auth", () => {
-  const user = ref(null);
+  // 1. Initialize user from localStorage to persist role on refresh
+  const user = ref(JSON.parse(localStorage.getItem("user")) || null);
   const accessToken = ref(localStorage.getItem("accessToken") || null);
   const refreshTokenValue = ref(localStorage.getItem("refreshToken") || null);
 
@@ -12,10 +13,12 @@ export const useAuthStore = defineStore("auth", () => {
   async function loginUser(credentials) {
     try {
       const data = await login(credentials);
-      user.value = data.user;
+      user.value = data.user; // This now includes the role from your backend change
       accessToken.value = data.accessToken;
       refreshTokenValue.value = data.refreshToken;
 
+      // 2. Save user object to localStorage
+      localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("accessToken", data.accessToken);
       localStorage.setItem("refreshToken", data.refreshToken);
     } catch (err) {
@@ -36,18 +39,14 @@ export const useAuthStore = defineStore("auth", () => {
 
   // Logout user
   async function logoutUser() {
-    try {
-      await logout(); // backend invalidation optional
-    } catch (err) {
-      console.error("Logout Error:", err);
-    } finally {
-      user.value = null;
-      accessToken.value = null;
-      refreshTokenValue.value = null;
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("refreshToken");
-      localStorage.removeItem("cart");
-    }
+    // ... logic ...
+    user.value = null;
+    accessToken.value = null;
+    refreshTokenValue.value = null;
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("user"); // 3. Clear user on logout
+    localStorage.removeItem("cart");
   }
 
   // Check if user is authenticated
@@ -78,12 +77,10 @@ export const useAuthStore = defineStore("auth", () => {
   async function verifyToken() {
     if (!accessToken.value) return logoutUser();
     try {
-      const { data } = await api.get("/auth/me", {
-        headers: { Authorization: `Bearer ${accessToken.value}` },
-      });
+      const { data } = await api.get("/auth/me");
       user.value = data.user;
+      localStorage.setItem("user", JSON.stringify(data.user));
     } catch (err) {
-      console.error("Verify Token Error:", err);
       await logoutUser();
     }
   }
@@ -92,6 +89,7 @@ export const useAuthStore = defineStore("auth", () => {
     user,
     accessToken,
     isAuthenticated,
+    refreshTokenValue,
     loginUser,
     registerUser,
     logoutUser,

@@ -12,8 +12,44 @@
       <div
         class="flex flex-col md:flex-row items-center justify-center max-w-4xl mx-auto gap-0 overflow-hidden rounded-lg shadow-2xl">
 
-        <BaseInput class="w-full md:flex-1 !rounded-none !border-none" v-model="productsStore.search"
-          @update:modelValue="() => productsStore.fetchProducts(1)" placeholder="Search products..." />
+        <div class="relative  md:flex-1 items-center ">
+          <BaseInput
+            v-model="searchQuery"
+            placeholder="Search products..."
+            class=" !rounded-xl border-gray-300 "
+            @keyup.enter="searchProducts"
+          />
+
+          <!-- SEARCH button -->
+          <button
+            v-if="!isSearched"
+            @click="searchProducts"
+            :disabled="!searchQuery.trim()"
+            class="absolute h-[45px] top-button-search cursor-pointer
+                  bg-blue-600 text-white text-sm font-medium
+                  px-4 py-2 rounded-xl
+                  hover:bg-blue-700 transition
+                    disabled:cursor-not-allowed"
+          >
+            Search
+          </button>
+
+          <!-- CLEAR button -->
+          <button
+            v-else
+            @click="clearSearch"
+            class="absolute right-1 top-2.5 cursor-pointer
+                  w-9 h-9 flex items-center justify-center
+                  rounded-full
+                  bg-gray-100 text-gray-500
+                  hover:bg-red-100 hover:text-red-500
+                  transition"
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
+        </div>
+
 
         <!-- category filter -->
         <div class="ml-1 mt-3 md:mt-0 relative w-full md:w-auto">
@@ -111,6 +147,29 @@ watchEffect(() => {
   document.body.style.overflow = showCart.value ? 'hidden' : '';
 });
 
+const searchQuery = ref("");
+const isSearched = ref(false);
+
+function searchProducts() {
+  if (!searchQuery.value.trim()) return;
+
+  productsStore.search = searchQuery.value;
+  productsStore.fetchProducts(1);
+  isSearched.value = true;
+}
+
+function clearSearch() {
+  searchQuery.value = "";
+  productsStore.search = "";
+  productsStore.fetchProducts(1);
+  isSearched.value = false;
+}
+
+watch(searchQuery, (val) => {
+  if (!val) isSearched.value = false;
+});
+
+
 // Fetch products on mount
 onMounted(() => {
   productsStore.fetchProducts();
@@ -142,5 +201,10 @@ watch(
 .fade-enter-to,
 .fade-leave-from {
   opacity: 1;
+}
+
+.top-button-search{
+  top: 6.5px;
+  right: 2px
 }
 </style>
