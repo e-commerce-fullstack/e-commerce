@@ -34,4 +34,12 @@ export const createProduct = async (formData, token) => {
   return res.data;
 };
 
+// delete product
+export const deleteProduct = async(id, token)=>{
+  const res = await api.delete(`/product/${id}`,{
+    headers: { Authorization: `Bearer ${token}` } 
+  })
+
+  return res.data
+}
 

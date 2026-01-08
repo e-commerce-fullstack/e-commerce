@@ -52,7 +52,6 @@ const handleLogin = async () => {
     await authStore.verifyToken(); // optional, fetches user
 
     router.push("/");
-    alert("Login successful");
   } catch (error) {
     errorMessage.value =
       error.response?.data?.message || "Login failed. Please try again.";
