@@ -13,39 +13,25 @@
         class="flex flex-col md:flex-row items-center justify-center max-w-4xl mx-auto gap-0 overflow-hidden rounded-lg shadow-2xl">
 
         <div class="relative  md:flex-1 items-center ">
-          <BaseInput
-            v-model="searchQuery"
-            placeholder="Search products..."
-            class=" !rounded-xl border-gray-300 "
-            @keyup.enter="searchProducts"
-          />
+          <BaseInput v-model="searchQuery" placeholder="Search products..." class=" !rounded-xl border-gray-300 "
+            @keyup.enter="searchProducts" />
 
           <!-- SEARCH button -->
-          <button
-            v-if="!isSearched"
-            @click="searchProducts"
-            :disabled="!searchQuery.trim()"
-            class="absolute h-[45px] top-button-search cursor-pointer
+          <button v-if="!isSearched" @click="searchProducts" :disabled="!searchQuery.trim()" class="absolute h-[45px] top-button-search cursor-pointer
                   bg-blue-600 text-white text-sm font-medium
                   px-4 py-2 rounded-xl
                   hover:bg-blue-700 transition
-                    disabled:cursor-not-allowed"
-          >
+                    disabled:cursor-not-allowed">
             Search
           </button>
 
           <!-- CLEAR button -->
-          <button
-            v-else
-            @click="clearSearch"
-            class="absolute right-1 top-2.5 cursor-pointer
+          <button v-else @click="clearSearch" class="absolute right-1 top-2.5 cursor-pointer
                   w-9 h-9 flex items-center justify-center
                   rounded-full
                   bg-gray-100 text-gray-500
                   hover:bg-red-100 hover:text-red-500
-                  transition"
-            aria-label="Clear search"
-          >
+                  transition" aria-label="Clear search">
             ✕
           </button>
         </div>
@@ -203,7 +189,7 @@ watch(
   opacity: 1;
 }
 
-.top-button-search{
+.top-button-search {
   top: 6.5px;
   right: 2px
 }

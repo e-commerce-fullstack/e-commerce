@@ -1,7 +1,10 @@
 import { defineStore } from "pinia";
 import { ref, watch } from "vue";
-import { getCategories, getAllProducts } from "@/api/products.api";
-
+import {
+  getCategories,
+  getAllProducts,
+  createProduct,
+} from "@/api/products.api";
 
 export const useProductStore = defineStore("products", () => {
   const products = ref([]);
@@ -12,6 +15,7 @@ export const useProductStore = defineStore("products", () => {
   const search = ref("");
   const category = ref(""); // selected category
   const categories = ref([]);
+  const createPrd = ref([]);
 
   const fetchProducts = async (newPage = page.value) => {
     if (newPage !== page.value) {
@@ -45,6 +49,44 @@ export const useProductStore = defineStore("products", () => {
     }
   };
 
+  // create product in admin dashboard
+  const createProducts = async (productData) => {
+    const token = localStorage.getItem("token");
+
+    // 1. Debugging: Check if 'image' is actually a File object before sending
+    const { name, price, stock, category, image } = productData;
+    const formData = new FormData();
+
+    formData.append("name", name);
+    formData.append("price", price);
+    formData.append("category", category);
+    formData.append("stock", stock);
+    formData.append("image", image);
+
+    try {
+      // 2. Note: If your createProduct (API helper) is already setting headers,
+      // ensure it isn't overriding the multipart boundary.
+      const res = await createProduct(formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          // DO NOT set Content-Type here.
+          // Axios sets it automatically with the correct boundary when it sees FormData.
+        },
+      });
+
+      // 3. Refresh the list so the new product appears immediately
+      await fetchProducts(1);
+
+      return res;
+    } catch (err) {
+      console.error(
+        "Error creating product:",
+        err.response?.data || err.message
+      );
+      throw err;
+    }
+  };
+
   return {
     products,
     loading,
@@ -55,5 +97,6 @@ export const useProductStore = defineStore("products", () => {
     categories,
     fetchProducts,
     fetchCategories,
+    createProducts,
   };
 });

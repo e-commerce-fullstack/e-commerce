@@ -27,8 +27,8 @@ export const getProductById = async (id) => {
 
 
 // Create a new product
-export const createProduct = async (productData, token) => {
-  const res = await api.post(`/products`, productData, {
+export const createProduct = async (formData, token) => {
+  const res = await api.post(`/product`, formData, {
     headers: { Authorization: `Bearer ${token}` } // for protected routes
   });
   return res.data;
