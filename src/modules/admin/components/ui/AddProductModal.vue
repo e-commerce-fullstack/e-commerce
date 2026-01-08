@@ -61,7 +61,7 @@
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="resetForm">Cancel</Button>
+        <Button variant="outline" @click="resetForm">Reset</Button>
         <Button @click="submitProduct" :disabled="loading" class="bg-blue-600">
           {{ loading ? "Creating..." : "Save Product" }}
         </Button>

@@ -4,6 +4,7 @@ import {
   getCategories,
   getAllProducts,
   createProduct,
+  deleteProduct
 } from "@/api/products.api";
 
 export const useProductStore = defineStore("products", () => {
@@ -16,6 +17,7 @@ export const useProductStore = defineStore("products", () => {
   const category = ref(""); // selected category
   const categories = ref([]);
   const createPrd = ref([]);
+  const deleted = ref([])
 
   const fetchProducts = async (newPage = page.value) => {
     if (newPage !== page.value) {
@@ -48,6 +50,17 @@ export const useProductStore = defineStore("products", () => {
       console.log("Failed to fetch categories", err);
     }
   };
+
+  // delete
+  const deletedProduct = async (id) =>{
+    const token = localStorage.getItem('token')
+    try {
+      deleted.value = await deleteProduct(id, token)
+    } catch (err) {
+      console.log("Delete product fail", err.message);
+      
+    }
+  }
 
   // create product in admin dashboard
   const createProducts = async (productData) => {
@@ -98,5 +111,6 @@ export const useProductStore = defineStore("products", () => {
     fetchProducts,
     fetchCategories,
     createProducts,
+    deletedProduct
   };
 });

@@ -2,8 +2,8 @@
   "name": "E Smart Shop",
   "short_name": "E-Shop",
   "description": "The best place to shop online for smart gadgets.",
-  "id": "/",
-  "start_url": "/",
+  "id": "/?source=pwa",
+  "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait",
@@ -20,7 +20,7 @@
       "src": "/logo.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "maskable any"
     }
   ]
 }

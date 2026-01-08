@@ -37,7 +37,8 @@
           <tr v-if="productsStore.loading">
             <td colspan="5" class="p-8 text-center text-slate-500">Loading products...</td>
           </tr>
-          <tr v-for="product in productsStore.products" :key="product._id" :product="product" class="hover:bg-slate-50 transition-colors">
+          <tr v-for="product in productsStore.products" :key="product._id" :product="product"
+            class="hover:bg-slate-50 transition-colors">
             <td class="p-4">
               <img :src="product.image" class="w-12 h-12 rounded object-cover border" />
             </td>
@@ -49,19 +50,20 @@
                 <Button variant="ghost" size="icon" class="text-slate-500">
                   <Edit class="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="icon" class="text-red-500">
-                  <Trash2 class="w-4 h-4" />
-                </Button>
+                <!-- Confirm delete modal -->
+                <DeleteProductDialog :product-id="product._id" />
               </div>
             </td>
           </tr>
-          <Pagination :current-page="productsStore.page" :total-pages="productsStore.totalPages"
-          @change-page="(newPage) => productsStore.fetchProducts(newPage)" />
+          <div class="p-4 border-t bg-slate-50/50">
+            <Pagination :current-page="productsStore.page" :total-pages="productsStore.totalPages"
+              @change-page="(newPage) => productsStore.fetchProducts(newPage)" />
+          </div>
         </tbody>
       </table>
     </div>
   </div>
-  
+
 
 </template>
 
@@ -72,11 +74,15 @@ import { Button } from '@/components/ui/button';
 import { Plus, Search, Edit, Trash2 } from 'lucide-vue-next';
 import Pagination from '@/components/Pagination.vue';
 import AddProductModal from '../components/ui/AddProductModal.vue';
+import DeleteProductDialog from '../components/ui/DeleteProductDialog.vue';
 
 const productsStore = useProductStore();
 
 onMounted(() => {
   productsStore.fetchProducts();
   productsStore.fetchCategories();
+  // productsStore.deletedProduct()
 });
+
+
 </script>
