@@ -1,5 +1,5 @@
 <template>
-  <Dialog>
+  <Dialog v-model:open="openModal">
     <DialogTrigger asChild>
       <Button v-if="isEdit" variant="ghost" size="icon" class="text-slate-500 hover:text-blue-600">
         <Edit class="w-4 h-4" />
@@ -13,7 +13,8 @@
       <DialogHeader>
         <DialogTitle>{{ isEdit ? 'Edit Product' : 'Add New Product' }}</DialogTitle>
         <DialogDescription>
-          {{ isEdit ? 'Update the existing product information.' : 'Enter details to list a new product in the store.' }}
+          {{ isEdit ? 'Update the existing product information.' : 'Enter details to list a new product in the store.'
+          }}
         </DialogDescription>
       </DialogHeader>
 
@@ -46,10 +47,12 @@
 
         <div class="space-y-1">
           <label class="text-sm font-bold">Product Image</label>
-          <div class="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 min-h-[220px]">
+          <div
+            class="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center bg-gray-50 min-h-[220px]">
             <template v-if="imagePreview">
               <img :src="imagePreview" class="h-32 w-auto object-contain rounded shadow-md mb-2" />
-              <Button variant="ghost" size="sm" @click="clearImage" class="text-red-500 hover:bg-red-50">Remove & Replace</Button>
+              <Button variant="ghost" size="sm" @click="clearImage" class="text-red-500 hover:bg-red-50">Remove &
+                Replace</Button>
             </template>
             <template v-else>
               <label class="cursor-pointer flex flex-col items-center">
@@ -76,10 +79,13 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from "vue";
+
 import { useProductStore } from "@/stores/productStore";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Plus, Edit } from "lucide-vue-next";
+import { toast } from "vue-sonner"
+const openModal = ref(false)
 
 const props = defineProps({
   product: {
@@ -138,12 +144,14 @@ const resetForm = () => {
 };
 
 const submitProduct = async () => {
-  if (!form.value.name) return alert("Product name is required");
-
+  if (!form.value.name) {
+    toast.error("Product name is required");
+    return;
+  }
   loading.value = true;
   try {
     const payload = { ...form.value };
-    
+
     // Only send 'image' property if a new file was actually picked
     if (imageFile.value) {
       payload.image = imageFile.value;
@@ -151,12 +159,14 @@ const submitProduct = async () => {
 
     if (isEdit.value) {
       await productStore.updateProductStore(props.product._id, payload);
-      alert("Product updated successfully!");
+      openModal.value = false
+      toast.success("Product updated successfully!");
     } else {
       if (!imageFile.value) return alert("Image is required for new products");
       await productStore.createProducts(payload);
-      alert("Product added successfully!");
+      toast.success("Product added successfully!"); // Nice styled popup
       // resetForm();
+
     }
   } catch (err) {
     console.error("Submission failed:", err);
