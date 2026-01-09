@@ -1,5 +1,14 @@
 import api from "./api";
 
+
+// update 
+export const updateProduct = async (id, formData, token) =>{
+    const res = await api.put(`/product/${id}`, formData, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}
+
 // 1. Get Categories (Moved this logic up)
 export const getCategories = async (token) => {
   // We add a config object to ensure no old tokens interfere
