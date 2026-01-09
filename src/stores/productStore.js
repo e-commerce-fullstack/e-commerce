@@ -4,7 +4,8 @@ import {
   getCategories,
   getAllProducts,
   createProduct,
-  deleteProduct
+  deleteProduct,
+  updateProduct,
 } from "@/api/products.api";
 
 export const useProductStore = defineStore("products", () => {
@@ -17,7 +18,27 @@ export const useProductStore = defineStore("products", () => {
   const category = ref(""); // selected category
   const categories = ref([]);
   const createPrd = ref([]);
-  const deleted = ref([])
+  const deleted = ref([]);
+
+  const updateProductStore = async (id, productData) => {
+    const token = localStorage.getItem("token");
+    const formData = new FormData();
+    Object.keys(productData).forEach((key) => {
+      // Only append if the value isn't null
+      if (productData[key] !== null) {
+        formData.append(key, productData[key]);
+      }
+    });
+
+    try {
+      const res = await updateProduct(id, formData, token)
+      await fetchProducts()
+      return res
+    } catch (err) {
+      console.log("Update product fail");
+      
+    }
+  };
 
   const fetchProducts = async (newPage = page.value) => {
     if (newPage !== page.value) {
@@ -52,15 +73,14 @@ export const useProductStore = defineStore("products", () => {
   };
 
   // delete
-  const deletedProduct = async (id) =>{
-    const token = localStorage.getItem('token')
+  const deletedProduct = async (id) => {
+    const token = localStorage.getItem("token");
     try {
-      deleted.value = await deleteProduct(id, token)
+      deleted.value = await deleteProduct(id, token);
     } catch (err) {
       console.log("Delete product fail", err.message);
-      
     }
-  }
+  };
 
   // create product in admin dashboard
   const createProducts = async (productData) => {
@@ -111,6 +131,7 @@ export const useProductStore = defineStore("products", () => {
     fetchProducts,
     fetchCategories,
     createProducts,
-    deletedProduct
+    deletedProduct,
+    updateProductStore
   };
 });
