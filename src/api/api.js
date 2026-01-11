@@ -3,7 +3,7 @@ import { useAuthStore } from "@/stores/authStore.js";
 
 const api = axios.create({
   // Fallback ensures it always hits the backend container port
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Attach access token to requests

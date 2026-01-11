@@ -2,7 +2,7 @@
     <div class="p-8 max-w-6xl mx-auto">
         <div class="mb-10 flex justify-between items-end">
             <div>
-                <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Payment Approvals</h1>
+                <h1 class="text-2xl font-extrabold tracking-tight text-slate-900">Payment Check</h1>
                 <p class="text-slate-500 mt-2 text-lg">Cross-check the reference numbers with your bank receipts.</p>
             </div>
             <Badge variant="outline" class="px-4 py-1 text-sm font-semibold border-slate-300">

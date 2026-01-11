@@ -1,4 +1,4 @@
-import api from "./api"; // Axios instance pointing to http://localhost:5000
+import api from "./api"; 
 
 /**
  * @desc    Submit payment request to generate a valid KHQR
