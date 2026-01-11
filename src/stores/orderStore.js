@@ -1,38 +1,78 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { createOrder, getOrders, getOrdersById } from "@/api/order.api.js";
+import { createOrder, getOrders, getOrderById } from "@/api/order.api.js";
 
 export const useOrderStore = defineStore("order", () => {
   const orders = ref([]);
-  // 1. Add this to hold the single order for the payment page
-  const currentOrder = ref(null); 
+  const currentOrder = ref(null);
+  const loading = ref(false);
 
-  const placeOrder = async ({ products, total, status }) => {
-    const res = await createOrder({ products, total, status });
-    orders.value.push(res);
-    // Optional: set this as current when created
-    currentOrder.value = res; 
-    return res;
+  /**
+   * Create a new order via Gateway
+   */
+  const placeOrder = async (orderData) => {
+    loading.value = true;
+    try {
+      const res = await createOrder(orderData);
+
+      // FIX: Extract 'order' from the response if it exists
+      // If your backend returns { order: { ... } }, use res.order
+      const orderDataActual = res.order || res;
+
+      orders.value.push(orderDataActual);
+      currentOrder.value = orderDataActual;
+
+      return orderDataActual; // Now this contains the _id for the router
+    } catch (err) {
+      console.error("Place order failed:", err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
   };
 
+  /**
+   * Fetch all user orders
+   */
   const fetchOrders = async () => {
-    const res = await getOrders();
-    orders.value = res;
-    return res;
+    loading.value = true;
+    try {
+      const res = await getOrders();
+      orders.value = res;
+      return res;
+    } finally {
+      loading.value = false;
+    }
   };
 
+  /**
+   * Fetch one specific order (Used on the Payment/Invoice page)
+   */
   const fetchOrderById = async (orderId) => {
-    const res = await getOrdersById(orderId);
-    // 2. Save the result to the reactive ref
-    currentOrder.value = res; 
-    return res;
+    loading.value = true;
+    try {
+      const res = await getOrderById(orderId);
+      currentOrder.value = res;
+      return res;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  /**
+   * Reset the current order (Call this after payment is complete)
+   */
+  const clearCurrentOrder = () => {
+    currentOrder.value = null;
   };
 
   return {
     orders,
-    currentOrder, // 3. Export it so the component can see it
+    currentOrder,
+    loading,
     placeOrder,
     fetchOrders,
     fetchOrderById,
+    clearCurrentOrder,
   };
 });

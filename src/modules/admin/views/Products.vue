@@ -29,6 +29,7 @@
             <th class="p-4 font-medium">Image</th>
             <th class="p-4 font-medium">Name</th>
             <th class="p-4 font-medium">Category</th>
+            <th class="p-4 font-medium">Stock</th>
             <th class="p-4 font-medium">Price</th>
             <th class="p-4 font-medium">Actions</th>
           </tr>
@@ -44,6 +45,7 @@
             </td>
             <td class="p-4 font-medium">{{ product.name }}</td>
             <td class="p-4 text-slate-600">{{ product.category }}</td>
+            <td class="p-4 text-slate-600">{{ product.stock }}</td>
             <td class="p-4 font-semibold text-blue-600">${{ product.price }}</td>
             <td class="p-4">
               <div class="flex gap-2">

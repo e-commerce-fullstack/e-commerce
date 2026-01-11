@@ -1,22 +1,26 @@
 import api from "./api.js";
 
-// Create order
+// Create a new order
 export const createOrder = async (payload) => {
-  // Changed /order to /orders
-  const res = await api.post("/order", payload); 
+  // Get token directly from localStorage to be 100% sure
+  const token = localStorage.getItem("accessToken"); 
+  
+  const res = await api.post("/orders", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  }); 
   return res.data;
 };
 
-// Get all orders
+// Get all orders for the current user
 export const getOrders = async () => {
-  // Changed /order to /orders
-  const res = await api.get("/order"); 
+  const res = await api.get("/orders"); 
   return res.data;
 };
 
-// Get order by ID
-export const getOrdersById = async (orderId) => {
-  // Changed /order to /orders
-  const res = await api.get(`/order/${orderId}`); 
+// Get a specific order detail
+export const getOrderById = async (orderId) => {
+  const res = await api.get(`/orders/${orderId}`); 
   return res.data;
 };

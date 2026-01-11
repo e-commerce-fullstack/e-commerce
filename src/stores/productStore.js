@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import {
   getCategories,
   getAllProducts,
@@ -9,42 +9,23 @@ import {
 } from "@/api/products.api";
 
 export const useProductStore = defineStore("products", () => {
+  // --- STATE ---
   const products = ref([]);
-  const loading = ref(false);
-  const page = ref(1); // current page
-  const totalPages = ref(1); // total pages
-  const limit = 8; // items per page
-  const search = ref("");
-  const category = ref(""); // selected category
   const categories = ref([]);
-  const createPrd = ref([]);
-  const deleted = ref([]);
+  const loading = ref(false);
+  const page = ref(1);
+  const totalPages = ref(1);
+  const limit = 8;
+  const search = ref("");
+  const category = ref("");
 
-  const updateProductStore = async (id, productData) => {
-    const token = localStorage.getItem("token");
-    const formData = new FormData();
-    Object.keys(productData).forEach((key) => {
-      // Only append if the value isn't null
-      if (productData[key] !== null) {
-        formData.append(key, productData[key]);
-      }
-    });
+  // --- ACTIONS ---
 
-    try {
-      const res = await updateProduct(id, formData, token)
-      await fetchProducts()
-      return res
-    } catch (err) {
-      console.log("Update product fail");
-      
-    }
-  };
-
+  /**
+   * Fetch products with pagination and filters
+   */
   const fetchProducts = async (newPage = page.value) => {
-    if (newPage !== page.value) {
-      loading.value = true;
-    }
-
+    loading.value = true;
     page.value = newPage;
 
     try {
@@ -56,71 +37,87 @@ export const useProductStore = defineStore("products", () => {
       });
 
       products.value = response.products || [];
-      totalPages.value =
-        response.totalPages ?? Math.ceil(response.totalItems / limit) ?? 1;
+      // Calculate total pages based on gateway response
+      totalPages.value = response.totalPages || Math.ceil(response.totalItems / limit) || 1;
+    } catch (err) {
+      console.error("Fetch products failed:", err);
     } finally {
       loading.value = false;
     }
   };
 
+  /**
+   * Fetch all categories
+   */
   const fetchCategories = async () => {
-    const token = localStorage.getItem("token");
     try {
-      categories.value = await getCategories(token);
+      // Token is handled by api.js interceptor automatically
+      categories.value = await getCategories();
     } catch (err) {
-      console.log("Failed to fetch categories", err);
+      console.error("Failed to fetch categories:", err);
     }
   };
 
-  // delete
-  const deletedProduct = async (id) => {
-    const token = localStorage.getItem("token");
-    try {
-      deleted.value = await deleteProduct(id, token);
-    } catch (err) {
-      console.log("Delete product fail", err.message);
-    }
-  };
-
-  // create product in admin dashboard
+  /**
+   * Create a new product (Admin)
+   */
   const createProducts = async (productData) => {
-    const token = localStorage.getItem("token");
-
-    // 1. Debugging: Check if 'image' is actually a File object before sending
-    const { name, price, stock, category, image } = productData;
     const formData = new FormData();
-
-    formData.append("name", name);
-    formData.append("price", price);
-    formData.append("category", category);
-    formData.append("stock", stock);
-    formData.append("image", image);
+    // Dynamically append fields
+    Object.keys(productData).forEach((key) => {
+      if (productData[key] !== null && productData[key] !== undefined) {
+        formData.append(key, productData[key]);
+      }
+    });
 
     try {
-      // 2. Note: If your createProduct (API helper) is already setting headers,
-      // ensure it isn't overriding the multipart boundary.
-      const res = await createProduct(formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          // DO NOT set Content-Type here.
-          // Axios sets it automatically with the correct boundary when it sees FormData.
-        },
-      });
-
-      // 3. Refresh the list so the new product appears immediately
+      const res = await createProduct(formData);
+      // Refresh to page 1 to show the newest product
       await fetchProducts(1);
-
       return res;
     } catch (err) {
-      console.error(
-        "Error creating product:",
-        err.response?.data || err.message
-      );
+      console.error("Create product fail:", err.response?.data || err.message);
+      throw err;
+    }
+  };
+
+  /**
+   * Update existing product
+   */
+  const updateProductStore = async (id, productData) => {
+    const formData = new FormData();
+    Object.keys(productData).forEach((key) => {
+      if (productData[key] !== null && productData[key] !== undefined) {
+        formData.append(key, productData[key]);
+      }
+    });
+
+    try {
+      const res = await updateProduct(id, formData);
+      await fetchProducts(); // Refresh current page
+      return res;
+    } catch (err) {
+      console.error("Update product fail:", err);
+      throw err;
+    }
+  };
+
+  /**
+   * Delete product
+   */
+  const deletedProduct = async (id) => {
+    try {
+      await deleteProduct(id);
+      // Refresh current page after deletion
+      await fetchProducts();
+    } catch (err) {
+      console.error("Delete product fail:", err.message);
       throw err;
     }
   };
 
   return {
+    // State
     products,
     loading,
     page,
@@ -128,6 +125,7 @@ export const useProductStore = defineStore("products", () => {
     search,
     category,
     categories,
+    // Actions
     fetchProducts,
     fetchCategories,
     createProducts,

@@ -52,7 +52,7 @@ const customers = ref([]);
 
 onMounted(async () => {
     try {
-        const res = await api.get('/users/all'); // Update to your route
+        const res = await api.get('auth/users/all'); // Update to your route
         customers.value = res.data.allUsers
         console.log(res.data.allUsers);
 
