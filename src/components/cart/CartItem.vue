@@ -7,8 +7,9 @@
 
     <!-- Info -->
     <div class="flex flex-1 flex-col justify-between h-24">
-      
+
       <div class="flex justify-between items-start">
+        
         <h3 class="font-semibold text-gray-900 line-clamp-2 leading-snug">{{ item.name }}</h3>
         <p class="font-bold text-indigo-600 ml-4">${{ item.price.toFixed(2) }}</p>
       </div>
