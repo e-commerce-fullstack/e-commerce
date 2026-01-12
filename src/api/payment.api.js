@@ -1,33 +1,39 @@
-import api from "./api"; // Import your configured axios instance
+import api from "./api"; 
 
-export const submitKHQRPayment = async (orderId, transactionId, amount) => {
+/**
+ * @desc    Submit payment request to generate a valid KHQR
+ * @route   POST /payments/khqr
+ */
+export const submitKHQRPayment = async (orderId, total) => {
   try {
-    const response = await api.post("/payment/khqr", {
+    // Standardized to match the Gateway route we created
+    const response = await api.post("/payments", {
       orderId,
-      transactionId,
-      amount,
+      total: Number(total) || 0,
     });
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
+    const errorMessage = error.response?.data?.detail || "Failed to generate KHQR";
+    throw new Error(errorMessage);
   }
 };
 
-export const getPaymentStatus = async (orderId) => {
+/**
+ * @desc    Check if a specific QR has been paid (Polling)
+ * @route   GET /payments/verify/:md5
+ */
+export const getPaymentStatusByMd5 = async (md5) => {
   try {
-    const response = await api.get(`/payment/order/${orderId}`);
+    const searchMd5 = md5.toLowerCase().trim();
+    
+    // Updated to match Gateway: /payments/verify/:md5
+    const response = await api.get(`/payments/status/${searchMd5}`);
     return response.data;
   } catch (error) {
-    throw error.response?.data || error.message;
-  }
-};
-
-// This one is for your Admin Panel later
-export const verifyPaymentAdmin = async (transactionId) => {
-  try {
-    const response = await api.post("/payment/verify", { transactionId });
-    return response.data;
-  } catch (error) {
-    throw error.response?.data || error.message;
+    // If the record isn't in DB yet or bank hasn't processed, return PENDING
+    if (error.response?.status === 404) {
+      return { success: false, status: "PENDING" };
+    }
+    return { success: false, status: "ERROR", message: error.message };
   }
 };

@@ -12,14 +12,20 @@ export const register = async (userData) => {
   return res.data;
 };
 
+// Get Current User Profile (ADD THIS)
+export const getMe = async () => {
+  const res = await api.get(`/auth/me`);
+  return res.data;
+};
+
 // Logout
 export const logout = async () => {
   const res = await api.post(`/auth/logout`);
   return res.data;
 };
 
-// Refresh access token (send refresh token in body)
+// Refresh access token
 export const refresh = async (refreshToken) => {
   const res = await api.post(`/auth/refresh`, { refreshToken });
-  return res.data; // { accessToken: '...' }
+  return res.data; 
 };

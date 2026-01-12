@@ -2,9 +2,9 @@
   <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold tracking-tight">Product Management</h1>
-      <Button class="bg-blue-600 hover:bg-blue-700">
-        <AddProductModal />
-      </Button>
+      <!-- <Button class="bg-blue-600 hover:bg-blue-700"> -->
+      <EditAddProductModal />
+      <!-- </Button> -->
     </div>
 
     <div class="flex gap-4 items-center bg-white p-4 rounded-lg shadow-sm">
@@ -29,6 +29,7 @@
             <th class="p-4 font-medium">Image</th>
             <th class="p-4 font-medium">Name</th>
             <th class="p-4 font-medium">Category</th>
+            <th class="p-4 font-medium">Stock</th>
             <th class="p-4 font-medium">Price</th>
             <th class="p-4 font-medium">Actions</th>
           </tr>
@@ -44,23 +45,22 @@
             </td>
             <td class="p-4 font-medium">{{ product.name }}</td>
             <td class="p-4 text-slate-600">{{ product.category }}</td>
+            <td class="p-4 text-slate-600">{{ product.stock }}</td>
             <td class="p-4 font-semibold text-blue-600">${{ product.price }}</td>
             <td class="p-4">
               <div class="flex gap-2">
-                <Button variant="ghost" size="icon" class="text-slate-500">
-                  <Edit class="w-4 h-4" />
-                </Button>
+                <EditAddProductModal :product="product" />
                 <!-- Confirm delete modal -->
                 <DeleteProductDialog :product-id="product._id" />
               </div>
             </td>
           </tr>
-          <div class="p-4 border-t bg-slate-50/50">
-            <Pagination :current-page="productsStore.page" :total-pages="productsStore.totalPages"
-              @change-page="(newPage) => productsStore.fetchProducts(newPage)" />
-          </div>
         </tbody>
       </table>
+      <div class="p-4 border-t bg-slate-50/50">
+        <Pagination :current-page="productsStore.page" :total-pages="productsStore.totalPages"
+          @change-page="(newPage) => productsStore.fetchProducts(newPage)" />
+      </div>
     </div>
   </div>
 
@@ -73,7 +73,7 @@ import { useProductStore } from '@/stores/productStore';
 import { Button } from '@/components/ui/button';
 import { Plus, Search, Edit, Trash2 } from 'lucide-vue-next';
 import Pagination from '@/components/Pagination.vue';
-import AddProductModal from '../components/ui/AddProductModal.vue';
+import EditAddProductModal from '../components/ui/EditAddProductModal.vue';
 import DeleteProductDialog from '../components/ui/DeleteProductDialog.vue';
 
 const productsStore = useProductStore();

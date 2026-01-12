@@ -1,5 +1,6 @@
 <template>
-  <div class="max-w-md mx-4 sm:mx-auto bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-200/50 p-8 mt-4">
+  <div
+    class="max-w-md mx-4 sm:mx-auto bg-white border border-slate-100 rounded-2xl shadow-xl shadow-slate-200/50 p-8 mt-4">
     <!-- Header -->
     <div class="flex items-center justify-between mb-8">
       <BaseButton @click="goBack" variant="base"
@@ -73,29 +74,26 @@ const total = computed(() =>
 
 // Confirm order
 const confirmOrder = async () => {
-  isLoading.value = true
+  isLoading.value = true;
   try {
     const payload = {
-      products: cartItems.map(i => ({ product: i._id, quantity: i.quantity })),
-      total: total.value,
+      products: cartItems.map(i => ({ productId: i._id, quantity: i.quantity })),
+      total: total.value, // Take total from cart here (before clearing)
       status: "pending",
     };
 
-    // 1. Create the order in the database
     const res = await orderStore.placeOrder(payload);
     
-    // 2. Clear cart
-    cartStore.clearCart(); // Better than just localStorage.removeItem
-
-    // 3. ROUTE TO PAYMENT (not order history)
-    // Assuming 'res' contains the new order object with _id
-    router.push(`/payment/${res._id}`); 
+    // Clear cart ONLY after the API has successfully received the data
+    cartStore.clearCart(); 
     
+    // Use the ID returned from the server
+    const orderId = res.order?._id || res._id;
+    router.push(`/payment/${orderId}`);
   } catch (err) {
-    console.error("Failed to place order:", err);
-    alert("Could not create order. Please try again.");
+    console.error("Order placement failed", err);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
 };
 

@@ -3,7 +3,7 @@ import { useAuthStore } from "@/stores/authStore.js";
 
 const api = axios.create({
   // Fallback ensures it always hits the backend container port
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:4001/api/v1',
+  baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
 // Attach access token to requests
@@ -11,7 +11,7 @@ api.interceptors.request.use((config) => {
   const auth = useAuthStore();
   
   // Skip adding token for public routes
-  const publicRoutes = ["/auth/login", "/auth/register", "/auth/refresh", "/auth/logout"];
+  const publicRoutes = ["/auth/login", "/auth/register"];
   const isPublic = publicRoutes.some(route => config.url.includes(route));
 
   if (isPublic) {
@@ -25,25 +25,29 @@ api.interceptors.request.use((config) => {
 });
 
 // Handle 401 (token expired)
-api.interceptors.response.use(
-  (response) => response,
-  async (error) => {
-    const auth = useAuthStore();
-    const originalRequest = error.config;
+api.interceptors.request.use((config) => {
+  // 1. Get token from Store
+  const auth = useAuthStore();
+  let token = auth.accessToken;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        const newAccessToken = await auth.refreshAccessToken();
-        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
-        return api(originalRequest); 
-      } catch (err) {
-        await auth.logoutUser();
-        return Promise.reject(err);
-      }
-    }
-    return Promise.reject(error);
+  // 2. Backup: If store is empty (e.g. on page refresh), check LocalStorage
+  if (!token) {
+    token = localStorage.getItem("accessToken"); // Make sure the key matches your login save key
   }
-);
+
+  const publicRoutes = ["/auth/login", "/auth/register"];
+  const isPublic = publicRoutes.some(route => config.url.includes(route));
+
+  if (!isPublic && token) {
+    config.headers.Authorization = `Bearer ${token}`;
+    console.log("Interceptor added token to:", config.url); // Debug log
+  } else {
+    console.log("Interceptor SKIPPED token for:", config.url); // Debug log
+  }
+
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
 
 export default api;

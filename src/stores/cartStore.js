@@ -2,12 +2,13 @@ import { defineStore } from "pinia";
 import { ref, computed, watch } from "vue";
 
 export const useCartStore = defineStore("cart", () => {
-  // ✅ Load cart from localStorage if exists, else empty array
+  // ✅ Initialize state
   const cartItems = ref(JSON.parse(localStorage.getItem("cart")) || []);
+
+  // --- ACTIONS ---
 
   const addToCart = (product) => {
     const existing = cartItems.value.find((item) => item._id === product._id);
-
     if (existing) {
       existing.quantity += 1;
     } else {
@@ -24,8 +25,18 @@ export const useCartStore = defineStore("cart", () => {
 
   const updateQuantity = (productId, quantity) => {
     const item = cartItems.value.find((i) => i._id === productId);
-    if (item) item.quantity = quantity;
+    if (item && quantity > 0) {
+      item.quantity = parseInt(quantity);
+    } else if (item && quantity <= 0) {
+      removeFromCart(productId); // Auto-remove if quantity hits 0
+    }
   };
+
+  const clearCart = () => {
+    cartItems.value = [];
+  };
+
+  // --- GETTERS ---
 
   const totalPrice = computed(() =>
     cartItems.value.reduce(
@@ -34,7 +45,13 @@ export const useCartStore = defineStore("cart", () => {
     )
   );
 
-  // ✅ Persist cart to localStorage whenever it changes
+  // ✅ New: Count total items (e.g., 2 shirts + 1 hat = 3 items)
+  const totalItemsCount = computed(() =>
+    cartItems.value.reduce((total, item) => total + item.quantity, 0)
+  );
+
+  // --- WATCHERS ---
+
   watch(
     cartItems,
     (newCart) => {
@@ -43,11 +60,13 @@ export const useCartStore = defineStore("cart", () => {
     { deep: true }
   );
 
-  // ✅ ADD THIS FUNCTION
-  const clearCart = () => {
-    cartItems.value = [];
-    // The watch() below will automatically clear localStorage for you
+  return { 
+    cartItems, 
+    totalItemsCount,
+    totalPrice, 
+    addToCart, 
+    removeFromCart, 
+    updateQuantity, 
+    clearCart 
   };
-
-  return { cartItems, addToCart, removeFromCart, updateQuantity, totalPrice, clearCart };
 });
